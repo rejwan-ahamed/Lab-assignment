@@ -136,13 +136,30 @@ app.get("/single_student_data", (req, res) => {
 app.put("/Update_student_status", (req, res) => {
   const data = [req.body.groupName, req.body.status, req.body.roll];
   con.query(
-    "update `register` set groupName=?, status =? where roll =?",
+    "update `register` set groupName=? , status =? where roll =?",
     data,
     (error, result, field) => {
       if (error) {
         res.send("error in assign group leader api");
       }
       res.send(result);
+    }
+  );
+});
+
+// roll exist api
+app.get("/single_roll", (req, res) => {
+  const data = req.query.roll;
+  console.log(data);
+  con.query(
+    "select * from `register` where roll=?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in student single data query");
+      }
+      const groupLength = result;
+      res.send({ length: groupLength.length });
     }
   );
 });
