@@ -132,6 +132,21 @@ app.get("/single_student_data", (req, res) => {
   );
 });
 
+// update student status
+app.put("/Update_student_status", (req, res) => {
+  const data = [req.body.groupName, req.body.status, req.body.roll];
+  con.query(
+    "update `register` set groupName=?, status =? where roll =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
 });
