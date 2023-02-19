@@ -176,6 +176,55 @@ app.get("/student_login", (req, res) => {
   );
 });
 
+// get question by group name and leader roll
+app.get("/get_group_question", (req, res) => {
+  const data = [req.query.roll, req.query.groupName];
+  con.query(
+    "select * from `questions` where leader=? and groupName=?",
+    data,
+    (error, result, field) => {
+      res.send({ length: result.length, questions: result });
+    }
+  );
+});
+
+
+// get question by group name 
+app.get("/get_group_question_name", (req, res) => {
+  const data = [req.query.groupName];
+  con.query(
+    "select * from `questions` where groupName=? order by id desc",
+    data,
+    (error, result, field) => {
+      res.send({ length: result.length, questions: result });
+    }
+  );
+});
+// get single question by question id
+app.get("/get_single_question", (req, res) => {
+  const data = [req.query.id];
+  con.query(
+    "select * from `questions` where id=?",
+    data,
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
+});
+
+
+// get single user answer list by roll
+app.get("/get_single_user_answer_list", (req, res) => {
+  const data = [req.query.roll];
+  con.query(
+    "select * from `answers` where answer_by_roll=? order by id desc",
+    data,
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
 });
