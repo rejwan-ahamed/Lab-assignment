@@ -164,6 +164,18 @@ app.get("/single_roll", (req, res) => {
   );
 });
 
+// student login
+app.get("/student_login", (req, res) => {
+  const data = [req.query.roll, req.query.password];
+  con.query(
+    "select * from `register` where roll=? and password=?",
+    data,
+    (error, result, field) => {
+      res.send({ length: result.length, userData: result });
+    }
+  );
+});
+
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
 });
