@@ -23,12 +23,12 @@ app.get("/", (req, res) => {
 
 // admin login api start here
 app.get("/admin_login", (req, res) => {
-  const data = [req.body.email, req.body.password];
+  const data = [req.query.email, req.query.password];
   con.query(
     "select * from `admin-login` where email=? and password=?",
     data,
     (error, result, field) => {
-      res.send({ length: result.length });
+      res.send({ length: result.length, adminData: result });
     }
   );
 });
@@ -46,9 +46,12 @@ app.post("/create_group", (req, res) => {
 
 // getting all the group data
 app.get("/all_groups", (req, res) => {
-  con.query("select * from `group`", (error, result, field) => {
-    res.send(result);
-  });
+  con.query(
+    "select * from `group` order by id desc",
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
 });
 
 // search group already exist api
@@ -188,8 +191,7 @@ app.get("/get_group_question", (req, res) => {
   );
 });
 
-
-// get question by group name 
+// get question by group name
 app.get("/get_group_question_name", (req, res) => {
   const data = [req.query.groupName];
   con.query(
@@ -212,7 +214,6 @@ app.get("/get_single_question", (req, res) => {
   );
 });
 
-
 // get single user answer list by roll
 app.get("/get_single_user_answer_list", (req, res) => {
   const data = [req.query.roll];
@@ -224,6 +225,73 @@ app.get("/get_single_user_answer_list", (req, res) => {
     }
   );
 });
+
+// get single user answer count
+app.get("/get_single_user_answer_count", (req, res) => {
+  const data = [req.query.roll];
+  con.query(
+    "select * from `answers` where answer_by_roll=? order by id desc",
+    data,
+    (error, result, field) => {
+      res.send({ length: result.length });
+    }
+  );
+});
+
+// get single answer by id
+app.get("/get_single_answer", (req, res) => {
+  const data = [req.query.id];
+  con.query(
+    "select * from `answers` where id=?",
+    data,
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
+});
+
+// get all value from register by group
+app.get("/get_all_register", (req, res) => {
+  const data = [req.query.group];
+  con.query(
+    "select * from `register` where groupName=?",
+    data,
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
+});
+
+// set user question answer count
+
+app.put("/user_ans_update_count", (req, res) => {
+  const data = [req.body.submition, req.body.roll];
+  con.query(
+    "update `register` set submition =? where roll =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
+});
+
+
+// answer exist api
+app.get("/answer_exist", (req, res) => {
+  const data = [req.query.id, req.query.roll];
+  console.log(data)
+  con.query(
+    "select * from `answers` where questionID=? and answer_by_roll=?",
+    data,
+    (error, result, field) => {
+      res.send({length:result.length});
+    }
+  );
+});
+
 
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
