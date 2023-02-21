@@ -307,7 +307,7 @@ app.delete("/delete_question", (req, res) => {
 // update question
 app.put("/update_question", (req, res) => {
   const data = [req.body.question, req.body.id];
-  console.log(data)
+  console.log(data);
   con.query(
     "update `questions` set question=? where id =?",
     data,
@@ -318,6 +318,12 @@ app.put("/update_question", (req, res) => {
       res.send(result);
     }
   );
+});
+
+app.get("/random", (req, res) => {
+  const random = Math.floor(Math.random() * 1000000 + 1);
+  console.log(random);
+  res.send({ random: random });
 });
 
 app.listen(port, () => {
