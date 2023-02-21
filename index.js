@@ -183,7 +183,7 @@ app.get("/student_login", (req, res) => {
 app.get("/get_group_question", (req, res) => {
   const data = [req.query.roll, req.query.groupName];
   con.query(
-    "select * from `questions` where leader=? and groupName=?",
+    "select * from `questions` where leader=? and groupName=? order by id desc",
     data,
     (error, result, field) => {
       res.send({ length: result.length, questions: result });
@@ -278,20 +278,47 @@ app.put("/user_ans_update_count", (req, res) => {
   );
 });
 
-
 // answer exist api
 app.get("/answer_exist", (req, res) => {
   const data = [req.query.id, req.query.roll];
-  console.log(data)
+  console.log(data);
   con.query(
     "select * from `answers` where questionID=? and answer_by_roll=?",
     data,
     (error, result, field) => {
-      res.send({length:result.length});
+      res.send({ length: result.length });
     }
   );
 });
 
+// delete question
+app.delete("/delete_question", (req, res) => {
+  const data = [req.query.id];
+  console.log(data);
+  con.query(
+    "delete from `questions` where id=?",
+    data,
+    (error, result, field) => {
+      res.send(result);
+    }
+  );
+});
+
+// update question
+app.put("/update_question", (req, res) => {
+  const data = [req.body.question, req.body.id];
+  console.log(data)
+  con.query(
+    "update `questions` set question=? where id =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
+});
 
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
