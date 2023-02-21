@@ -3,6 +3,7 @@ const app = express();
 const port = process.env.PORT || 5000;
 const con = require("./config.js");
 const cors = require("cors");
+const nodemailer = require("nodemailer");
 
 // middle wars
 app.use(cors());
@@ -340,6 +341,7 @@ app.get("/otp_data", (req, res) => {
 
 app.put("/update_otp", (req, res) => {
   const data = [req.body.otp, req.body.email];
+  const otpMain = req.body.otp;
   console.log(data);
   con.query(
     "update `register` set otp =? where email =?",
@@ -349,6 +351,32 @@ app.put("/update_otp", (req, res) => {
         res.send("error in assign group leader api");
       }
       res.send(result);
+
+      async function main() {
+        // create reusable transporter object using the default SMTP transport
+        let transporter = nodemailer.createTransport({
+          host: "mail.api2023.xyz",
+          port: 465,
+          secure: true, // true for 465, false for other ports
+          auth: {
+            user: "noreply@api2023.xyz", // your cPanel email address
+            pass: "#Deadpoolback292#", // your cPanel email password
+          },
+        });
+
+        // send mail with defined transport object
+        let info = await transporter.sendMail({
+          from: '"OTP for password recovery" <noreply@api2023.xyz>', // sender address
+          to: "rejwanahamed85@gmail.com", // list of receivers
+          subject: "Password recovery otp", // Subject line
+          text: "Coding Day?", // plain text body
+          html: `<p>Your password recovery OTP is <b>${otpMain}<b/></p>`, // html body
+        });
+
+        console.log("Message sent: %s", info.messageId);
+      }
+
+      main().catch(console.error);
     }
   );
 });
