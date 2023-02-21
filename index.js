@@ -320,10 +320,37 @@ app.put("/update_question", (req, res) => {
   );
 });
 
-app.get("/random", (req, res) => {
-  const random = Math.floor(Math.random() * 1000000 + 1);
-  console.log(random);
-  res.send({ random: random });
+// otp section start here
+app.get("/otp_data", (req, res) => {
+  const data = req.query.roll;
+  console.log(data);
+  con.query(
+    "select * from `register` where roll=?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in student single data query");
+      }
+      res.send(result);
+    }
+  );
+});
+
+// otp update
+
+app.put("/update_otp", (req, res) => {
+  const data = [req.body.otp, req.body.email];
+  console.log(data);
+  con.query(
+    "update `register` set otp =? where email =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
 });
 
 app.listen(port, () => {
