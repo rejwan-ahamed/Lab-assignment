@@ -359,15 +359,15 @@ app.put("/update_otp", (req, res) => {
           port: 465,
           secure: true, // true for 465, false for other ports
           auth: {
-            user: "noreply@api2023.xyz", // your cPanel email address
-            pass: "#Deadpoolback292#", // your cPanel email password
+            user: "test@api2023.xyz", // your cPanel email address
+            pass: "rW.tMnD~ug2#", // your cPanel email password
           },
         });
 
         // send mail with defined transport object
         let info = await transporter.sendMail({
-          from: '"OTP for password recovery" <noreply@api2023.xyz>', // sender address
-          to: "rejwanahamed85@gmail.com", // list of receivers
+          from: '"OTP for password recovery" <test@api2023.xyz>', // sender address
+          to: "deadpoolzrx@gmail.com", // list of receivers
           subject: "Password recovery otp", // Subject line
           text: "Coding Day?", // plain text body
           html: `<p>Your password recovery OTP is <b>${otpMain}<b/></p>`, // html body
@@ -381,6 +381,33 @@ app.put("/update_otp", (req, res) => {
   );
 });
 
+// otp match
+app.get("/otp_match", (req, res) => {
+  const data = [req.query.email, req.query.otp];
+  console.log(data);
+  con.query(
+    "select * from `register` where email=? and otp=?",
+    data,
+    (error, result, field) => {
+      res.send({ length: result.length, adminData: result });
+    }
+  );
+});
+
+// update password
+app.put("/update_password", (req, res) => {
+  const data = [req.body.password, req.body.email];
+  con.query(
+    "update `register` set password =? where email =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
+});
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
 });
