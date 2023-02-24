@@ -582,7 +582,7 @@ app.get("/single_user_ans_list", (req, res) => {
     "select * from `answers` where answer_by_roll=?",
     data,
     (error, result, field) => {
-     res.send(result)
+      res.send(result);
     }
   );
 });
@@ -601,14 +601,35 @@ app.post("/comment_ans", (req, res) => {
 // comment ans
 app.get("/single_ans_comments", (req, res) => {
   const data = [req.query.id];
-  con.query( "select * from `comments` where ansID=?", data, (error, result, field) => {
-    if (error) {
-      res.send("error in create group api");
+  con.query(
+    "select * from `comments` where ansID=?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in create group api");
+      }
+      res.send(result);
     }
-    res.send(result);
-  });
+  );
 });
 
+// update ans
+
+// update ans
+app.put("/update_answer", (req, res) => {
+  const data = [req.body.ans, req.body.id];
+  console.log(data);
+  con.query(
+    "update `answers` set ans=? where id =?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in assign group leader api");
+      }
+      res.send(result);
+    }
+  );
+});
 
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
