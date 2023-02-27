@@ -490,7 +490,7 @@ app.put("/update_otp", (req, res) => {
             <tr>
               <td style="padding-right: 0px;padding-left: 0px;" align="center">
                 
-                <img align="center" border="0" src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhn2uW0LUuPLE2CSE7MuHEgP0ao5dF0ZxTTXOsHfVnjIJp5ju0UpiK7cci75QRpmJg9rSWDsVFIc0-wMt-A5_KsiCu9BfO42g03DQFBg8WKN8a36-F_d-8vB7n46YO_djLXlqedztD9-YZ_LyVIihdWYZLoumU9N57OHp2cKuQRSGDJjFw38BDEoxge2Q/s320/Group%2035.png" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 50%;max-width: 150px;" width="150" class="v-src-width v-src-max-width"/>
+                <img align="center" border="0" src="https://firebasestorage.googleapis.com/v0/b/database-b8ba9.appspot.com/o/open%20source%20logo.svg?alt=media&token=5dcb90c5-3de0-4e63-b307-377615661849" alt="" title="" style="outline: none;text-decoration: none;-ms-interpolation-mode: bicubic;clear: both;display: inline-block !important;border: none;height: auto;float: none;width: 50%;max-width: 150px;" width="150" class="v-src-width v-src-max-width"/>
                 
               </td>
             </tr>
@@ -626,6 +626,20 @@ app.put("/update_answer", (req, res) => {
       if (error) {
         res.send("error in assign group leader api");
       }
+      res.send(result);
+    }
+  );
+});
+
+app.get("/search", (req, res) => {
+  const array = req.query.a;
+  const num = array.toString();
+  let data = num;
+  console.log(data);
+  con.query(
+    "select * from  `questions` where id NOT IN" + `(${data})`,
+    data,
+    (error, result, field) => {
       res.send(result);
     }
   );
