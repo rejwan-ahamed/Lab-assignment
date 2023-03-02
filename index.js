@@ -58,7 +58,7 @@ app.get("/all_groups", (req, res) => {
 // search group already exist api
 app.get("/single_group", (req, res) => {
   const data = req.query.group;
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `group` where groupName=?",
     data,
@@ -112,6 +112,7 @@ app.post("/add_question", (req, res) => {
 // answer question
 app.post("/answer", (req, res) => {
   const data = req.body;
+  console.log(data);
   con.query(" insert into `answers` set ?", data, (error, result, field) => {
     if (error) {
       res.send("error in answer api");
@@ -123,7 +124,7 @@ app.post("/answer", (req, res) => {
 // search single student data
 app.get("/single_student_data", (req, res) => {
   const data = req.query.roll;
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `register` where roll=?",
     data,
@@ -154,7 +155,7 @@ app.put("/Update_student_status", (req, res) => {
 // roll exist api
 app.get("/single_roll", (req, res) => {
   const data = req.query.roll;
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `register` where roll=?",
     data,
@@ -229,9 +230,9 @@ app.get("/get_single_user_answer_list", (req, res) => {
 
 // get single user answer count
 app.get("/get_single_user_answer_count", (req, res) => {
-  const data = [req.query.roll];
+  const data = [req.query.roll, req.query.group];
   con.query(
-    "select * from `answers` where answer_by_roll=? order by id desc",
+    "select * from `answers` where answer_by_roll=? and groupName=? order by id desc",
     data,
     (error, result, field) => {
       res.send({ length: result.length });
@@ -282,7 +283,7 @@ app.put("/user_ans_update_count", (req, res) => {
 // answer exist api
 app.get("/answer_exist", (req, res) => {
   const data = [req.query.id, req.query.roll];
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `answers` where questionID=? and answer_by_roll=?",
     data,
@@ -295,7 +296,7 @@ app.get("/answer_exist", (req, res) => {
 // delete question
 app.delete("/delete_question", (req, res) => {
   const data = [req.query.id];
-  console.log(data);
+  // console.log(data);
   con.query(
     "delete from `questions` where id=?",
     data,
@@ -308,7 +309,7 @@ app.delete("/delete_question", (req, res) => {
 // update question
 app.put("/update_question", (req, res) => {
   const data = [req.body.question, req.body.id];
-  console.log(data);
+  // console.log(data);
   con.query(
     "update `questions` set question=? where id =?",
     data,
@@ -324,7 +325,7 @@ app.put("/update_question", (req, res) => {
 // otp section start here
 app.get("/otp_data", (req, res) => {
   const data = req.query.roll;
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `register` where roll=?",
     data,
@@ -343,7 +344,7 @@ app.put("/update_otp", (req, res) => {
   const data = [req.body.otp, req.body.email];
   const otpMain = req.body.otp;
   const email = req.body.email;
-  console.log(data);
+  // console.log(data);
   con.query(
     "update `register` set otp =? where email =?",
     data,
@@ -549,7 +550,7 @@ app.put("/update_otp", (req, res) => {
 // otp match
 app.get("/otp_match", (req, res) => {
   const data = [req.query.email, req.query.otp];
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `register` where email=? and otp=?",
     data,
@@ -577,7 +578,7 @@ app.put("/update_password", (req, res) => {
 // user question ans list
 app.get("/single_user_ans_list", (req, res) => {
   const data = [req.query.roll];
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from `answers` where answer_by_roll=?",
     data,
@@ -618,7 +619,7 @@ app.get("/single_ans_comments", (req, res) => {
 // update ans
 app.put("/update_answer", (req, res) => {
   const data = [req.body.ans, req.body.id];
-  console.log(data);
+  // console.log(data);
   con.query(
     "update `answers` set ans=? where id =?",
     data,
@@ -635,12 +636,26 @@ app.get("/search", (req, res) => {
   const array = req.query.a;
   const num = array.toString();
   let data = num;
-  console.log(data);
+  // console.log(data);
   con.query(
     "select * from  `questions` where id NOT IN" + `(${data})`,
     data,
     (error, result, field) => {
       res.send(result);
+    }
+  );
+});
+
+app.get("/search_condition", (req, res) => {
+  const data = [req.query.roll, req.query.question];
+  con.query(
+    "select * from `answers` where answer_by_roll=? and question=?",
+    data,
+    (error, result, field) => {
+      if (error) {
+        res.send("error in create group api");
+      }
+      res.send({ length: result.length });
     }
   );
 });
