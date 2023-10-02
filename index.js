@@ -660,6 +660,41 @@ app.get("/search_condition", (req, res) => {
   );
 });
 
+// delete all table data
+app.delete("/delete_all_data", (req, res) => {
+  // console.log(data);
+  con.query("DELETE FROM `answers`", (error, result, field) => {
+    if (error) {
+      res.send("error in create group api");
+    }
+    res.send(result);
+  });
+  con.query("DELETE FROM `comments`", (error, result, field) => {
+    if (error) {
+      res.send("error in create group api");
+    }
+    res.send(result);
+  });
+  con.query("DELETE FROM `group`", (error, result, field) => {
+    if (error) {
+      res.send("error in create group api");
+    }
+    res.send(result);
+  });
+  con.query("DELETE FROM `questions`", (error, result, field) => {
+    if (error) {
+      res.send("error in create group api");
+    }
+    res.send(result);
+  });
+  con.query("DELETE FROM `register`", (error, result, field) => {
+    if (error) {
+      res.send("error in create group api");
+    }
+    res.send(result);
+  });
+});
+
 app.listen(port, () => {
   console.log(`api listening port is ${port}`);
 });

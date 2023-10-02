@@ -1,10 +1,15 @@
+//dot env file package added
+require("dotenv").config();
+
 var mysql = require("mysql");
+
 var con = mysql.createConnection({
   host: "localhost",
-  user: "root",
-  password: "",
-  database: "lab2023",
+  user: process.env.user,
+  password: process.env.password,
+  database: process.env.database,
 });
+
 
 con.connect((err) => {
   if (err) {
